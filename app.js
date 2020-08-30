@@ -1,28 +1,39 @@
 // some constants
-const [HEIGHT, WIDTH] = [15, 15];
+let [HEIGHT, WIDTH] = [3, 3];
 
 // get DOM elements
-const container = document.querySelector(".net-game");
+const form = document.querySelector('.net-form');
+const container = document.querySelector('.net-grid');
 const tiles = container.children;
 
-// keep on track of each tile's rotation
-// todo: add this to game.js
-let rotations = Array(HEIGHT * WIDTH).fill(0);
+form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    WIDTH = HEIGHT = parseInt(form.size.value);
+    form.reset();
+    setupNewGame();
+})
 
 container.addEventListener('click', e => {
+    console.log(e.target);
     if (e.target.classList.contains('net-tile')) {
+        console.log('tile');
         const tileIndex = e.target.getAttribute('data-index');
 
-        rotations[tileIndex] = (rotations[tileIndex] + 90);
-        e.target.style.transform = `rotate(${rotations[tileIndex]}deg)`;
+        game.rotations[tileIndex] = (game.rotations[tileIndex] + 90);
+        e.target.style.transform = `rotate(${game.rotations[tileIndex]}deg)`;
         console.log()
     }
 }, true);
 
+const setupNewGame = () => {
+    console.log("heyo");
+    UI.initializeBoard();
+    game = new NetGame();
+    game.makeConnections();
+    UI.drawConnections(game.connections);
+}
 
+let game;
 const UI = new NetGameUI();
-const game = new NetGame();
-
-UI.initializeBoard();
-game.makeConnections();
-UI.drawConnections(game.connections);
+setupNewGame();

@@ -2,7 +2,9 @@ class NetGame {
     constructor() {
         // every tile starts out unvisited
         this.connections = Array(WIDTH * HEIGHT).fill(0);
+        this.rotations = Array(WIDTH * HEIGHT).fill(0);
     }
+
     makeConnections() {
         /* for connections, we use five bits: WSENV, West South East North Visited
          * e.g. 00000 means unvisited, 10101 means visited and connected West and
@@ -23,12 +25,14 @@ class NetGame {
         while (stack.length !== 0) {
             // take the first element of the stack
             const elem = stack.pop();
+            console.log('finding connection for ', elem);
 
             // we have a tile that is visited but not yet connected
             // we need to connect it to a tile that is connected
 
             // get shuffled list of neighbours
             let neighbours = this._getNeighbours(elem);
+            console.log("its neighbours are ", neighbours);
             shuffle(neighbours);
 
             let connected = false;
@@ -36,9 +40,11 @@ class NetGame {
                 if (!(this.connections[neighbour] & 1 << 0)) {
                     // this tile has not been visited
                     stack.push(neighbour);
+                    console.log("pushing", neighbour);
                     this.connections[neighbour] |= 1 << 0;
                 } else if (!connected && this.connections[neighbour] >> 1) {
                     // this tile already has a connection
+                    console.log("connecting ", elem, " to ", neighbour, " direction ", direction);
                     this.connections[elem] |= 1 << direction;
                     this.connections[neighbour] |= 1 << this._opposite(direction);
                     connected = true;
