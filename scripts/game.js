@@ -21,7 +21,6 @@ class NetGame {
         // connect the middle tile to the tile on its west and mark both tiles as
         // visited
         const middleTile = WIDTH * Math.floor(HEIGHT / 2) + Math.floor(WIDTH / 2);
-        console.log(middleTile);
 
         this.connections[middleTile] |= 1 << 0 | 1 << 4;
         this.connections[middleTile - 1] |= 1 << 0 | 1 << 2;
@@ -49,7 +48,6 @@ class NetGame {
                     this.connections[neighbour] |= 1 << 0;
                 } else if (!connected && this.connections[neighbour] >> 1) {
                     // this tile already has a connection
-                    console.log(`connecting ${elem} and ${neighbour}`);
                     this.connections[elem] |= 1 << direction;
                     this.connections[neighbour] |= 1 << this._opposite(direction);
                     connected = true;

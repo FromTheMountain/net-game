@@ -1,7 +1,5 @@
 class NetGameUI {
     initializeBoard(connections, rotations) {
-
-        console.log("heyo");
         container.style.width = `${50 * WIDTH}px`;
         container.style.height = `${50 * HEIGHT}px`;
 
