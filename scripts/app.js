@@ -15,23 +15,24 @@ form.addEventListener('submit', e => {
 })
 
 container.addEventListener('click', e => {
-    console.log(e.target);
-    if (e.target.classList.contains('net-tile')) {
-        console.log('tile');
+    if (e.target.classList.contains('net-tile') && !e.target.classList.contains('locked')) {
         const tileIndex = e.target.getAttribute('data-index');
 
-        game.rotations[tileIndex] = (game.rotations[tileIndex] + 90);
-        e.target.style.transform = `rotate(${game.rotations[tileIndex]}deg)`;
-        console.log()
+        game.rotations[tileIndex] = game.rotations[tileIndex] + 1;
+        e.target.style.transform = `rotate(${game.rotations[tileIndex] * 90}deg)`;
     }
 }, true);
 
+container.addEventListener('contextmenu', e => {
+    e.preventDefault();
+    if (e.target.classList.contains('net-tile')) {
+        e.target.classList.toggle('locked');
+    }
+});
+
 const setupNewGame = () => {
-    console.log("heyo");
-    UI.initializeBoard();
     game = new NetGame();
-    game.makeConnections();
-    UI.drawConnections(game.connections);
+    UI.initializeBoard(game.connections, game.rotations);
 }
 
 let game;

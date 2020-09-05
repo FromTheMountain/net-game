@@ -2,7 +2,12 @@ class NetGame {
     constructor() {
         // every tile starts out unvisited
         this.connections = Array(WIDTH * HEIGHT).fill(0);
-        this.rotations = Array(WIDTH * HEIGHT).fill(0);
+
+        // every tile gets a random rotation
+        this.rotations = [...Array(WIDTH * HEIGHT)].map(() => Math.floor(Math.random() * 4));
+
+        // and every tile gets a connection to the center
+        this.makeConnections();
     }
 
     makeConnections() {
@@ -15,24 +20,25 @@ class NetGame {
 
         // connect the middle tile to the tile on its west and mark both tiles as
         // visited
-        this.connections[(HEIGHT * WIDTH - 1) / 2] |= 1 << 0 | 1 << 4;
-        this.connections[(HEIGHT * WIDTH - 1) / 2 - 1] |= 1 << 0 | 1 << 2;
+        const middleTile = WIDTH * Math.floor(HEIGHT / 2) + Math.floor(WIDTH / 2);
+        console.log(middleTile);
 
-        // mark the tile to its east as visited and push it to the stack
-        this.connections[(HEIGHT * WIDTH - 1) / 2 + 1] |= 1 << 0;
-        let stack = [(HEIGHT * WIDTH - 1) / 2 + 1];
+        this.connections[middleTile] |= 1 << 0 | 1 << 4;
+        this.connections[middleTile - 1] |= 1 << 0 | 1 << 2;
+
+        // mark the tile to its north as visited and push it to the stack
+        this.connections[middleTile - WIDTH] |= 1 << 0;
+        let stack = [middleTile - WIDTH];
 
         while (stack.length !== 0) {
             // take the first element of the stack
             const elem = stack.pop();
-            console.log('finding connection for ', elem);
 
             // we have a tile that is visited but not yet connected
             // we need to connect it to a tile that is connected
 
             // get shuffled list of neighbours
             let neighbours = this._getNeighbours(elem);
-            console.log("its neighbours are ", neighbours);
             shuffle(neighbours);
 
             let connected = false;
@@ -40,11 +46,10 @@ class NetGame {
                 if (!(this.connections[neighbour] & 1 << 0)) {
                     // this tile has not been visited
                     stack.push(neighbour);
-                    console.log("pushing", neighbour);
                     this.connections[neighbour] |= 1 << 0;
                 } else if (!connected && this.connections[neighbour] >> 1) {
                     // this tile already has a connection
-                    console.log("connecting ", elem, " to ", neighbour, " direction ", direction);
+                    console.log(`connecting ${elem} and ${neighbour}`);
                     this.connections[elem] |= 1 << direction;
                     this.connections[neighbour] |= 1 << this._opposite(direction);
                     connected = true;

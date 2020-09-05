@@ -1,0 +1,3 @@
+# Net Game
+This logic game has various names, like NetWalk, and FreeNet. You can find an explanation of the game here: [https://www.logicgamesonline.com/netwalk/](https://www.logicgamesonline.com/netwalk/).
+The controls for my implementation are: left click to rotate a tile, right click to lock it. If you want a new puzzle or a puzzle of a different size, simply enter an integer >= 3 in the "grid size" form and press enter. There is no visual indication for when you solved the puzzle.
